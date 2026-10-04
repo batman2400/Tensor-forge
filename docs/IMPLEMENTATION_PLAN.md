@@ -184,7 +184,7 @@ Run the pre-submission checklist (section 7), tag the release, submit with a buf
 | --- | --- | --- | --- |
 | 0 | Sun 4 Oct | Scaffolding, environment, plans | done |
 | 1 | Mon 5 Oct | WP1, WP2, WP3, start WP9 | vertical slice runs locally with baseline model; contract tests started; Azure placeholder reachable over HTTPS |
-| 2 | Tue 6 Oct | WP4, WP5 (error analysis, classical tuning, encoder script + Kaggle CV launched) | jobs complete with tests; classical v1 candidate; encoder training running or finished |
+| 2 | Tue 6 Oct | WP4, WP5 (error analysis, classical tuning, Kaggle CV **launched first thing**) | jobs complete with tests; classical v1 candidate; encoder CV running or finished |
 | 3 | Wed 7 Oct | WP5 (fusion, ONNX), WP6, WP8 start | **gate G1 decided**; engine integrated; Dockerfile builds |
 | 4 | Thu 8 Oct | WP6 finish, WP7, WP8, WP9 deploy, WP10; **model freeze** | hosted service passes full suite and a 5,000-ticket job; manifest and digest recorded |
 | 5 | Fri 9 Oct | WP10 polish, WP11 (report, video) | README, report PDF, video uploaded |
@@ -209,6 +209,7 @@ Docker offline run, hosted deployment, training story, report, video.
 | Differential | our validators vs `jsonschema` on thousands of generated/mutated payloads |
 | Batch | order preserved, ids echoed, atomic failure, independence (shuffle a batch, outputs identical per ticket), `meta.count` |
 | Jobs | lifecycle, paging, idempotency, 429, 409, 410, 404, `DELETE`, restart-interrupted, determinism, responsiveness during a job, retention sweep |
+| Concurrency | 20 parallel `POST /batch/jobs` with the same `Idempotency-Key` give one job id and no 500; parallel submits beyond capacity give exactly 1 running + 3 queued and 429 for the rest; `/health` p95 under 1 s while a 5,000-ticket job runs under a mixed `/predict` load (measured on the 2 CPU / 4 GB limited container) |
 | Robustness | random bytes, huge unicode, control characters, injection phrases, 10k-char text, concurrency (50 parallel `/predict`), repeated 5,000 jobs |
 | Model | gold-label regression thresholds on validation (fail the build if macro-F1 drops), parity of ONNX vs PyTorch, calibration sanity |
 | Hosted (`-m hosted`) | same suite against `TF_BASE_URL` with the real key from the environment, including a 5,000-ticket job |
@@ -267,6 +268,7 @@ Repository and evidence
 | Contract detail missed | medium | high | contract tests from Day 1, differential validation test, ask organizers early |
 | Encoder too slow/large or not better | medium | medium | gate G1; ship improved classical model |
 | Kaggle quota, queue or session loss | medium | medium | script is resumable, checkpoints per fold; laptop fallback with smaller model |
+| Encoder CV takes longer than hoped | medium | medium | realistic estimate is 15-25 min per run on a T4, so 5 folds plus the final fit is about 1.5-2.5 h (session limit 12 h, weekly quota 30 h). Write `train_encoder.py` and smoke-test it on the laptop by the end of Day 1 so CV can start first thing on Day 2; run folds as separate checkpointed steps |
 | Hidden set differs in language mix | medium | medium | char n-grams, leave-one-language-out checks, calibrated confidence |
 | 4 GB memory pressure with job running | low | high | one model copy, int8, measured in WP7, swap file |
 | Azure quota/credits/DNS delay | medium | high | start Day 1, placeholder HTTPS early, check credit end date |

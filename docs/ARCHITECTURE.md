@@ -253,7 +253,10 @@ flowchart LR
       that are never urgent; `secondary != category`; `team = TEAM_BY_CATEGORY[category]`.
    5. `needs_human_review = confidence < review_threshold` (threshold documented in the README).
 6. **Determinism and independence.** Encoder runs at batch size 1 (dynamic length) so a ticket's output
-   cannot depend on padding or batch mates. Fixed thread counts, no sampling, no randomness. The same
+   cannot depend on padding or batch mates. One shared ONNX Runtime session with `intra_op_num_threads=1`
+   and `inter_op_num_threads=1` (sessions are thread-safe; each call then runs on its calling thread, so
+   a job and a live request each get their own core instead of fighting for both). No sampling, no
+   randomness. The same
    `Engine.predict` serves `/predict`, `/predict/batch` and jobs, so results are identical across
    endpoints and repeat runs. A test asserts this.
 7. **Safety against ticket content.** There is no LLM, so injected instructions cannot change behaviour;
@@ -314,8 +317,11 @@ not writable, so the plain `docker run` works). On the VM a Docker volume keeps 
 
 ### 6.3 Behaviour
 
-- **Submit.** After the standard checks the full payload is validated (all items). On success: apply
-  the idempotency rule, check capacity, insert `queued`, push the job onto an in-memory FIFO (tickets
+- **Submit.** After the standard checks the full payload is validated (all items). On success, **inside
+  one critical section** (a process-wide lock around the SQLite transaction, so parallel identical
+  requests cannot race): apply the idempotency rule, check capacity, insert `queued`. As a second line
+  of defence, a `sqlite3.IntegrityError` on the unique `idempotency_key` is caught and answered by
+  fetching and returning the existing job with `202`, never a 500. Then push the job onto an in-memory FIFO (tickets
   stay in memory, they are not needed after a crash because the job just fails), return `202` with the
   status body, `Location: /batch/jobs/{job_id}` and `Retry-After: 2`. Job ids are UUID4.
 - **Capacity.** At most 1 running and 3 queued. A fifth active job gets `429 too_many_jobs` with
@@ -324,8 +330,10 @@ not writable, so the plain `docker run` works). On the VM a Docker volume keeps 
   payload hash differs we still return the original job (documented), never create a duplicate.
 - **Worker.** One daemon thread. For each ticket it calls `Engine.predict`, writes results in chunks
   (for example every 50 tickets: insert results and update `processed` in one transaction), checks the
-  cancel flag between chunks, and yields to live traffic by running inference without holding any
-  lock the request path needs. `processed` never decreases.
+  cancel flag between chunks, and yields to live traffic: it never holds a lock the request path needs,
+  and calls `time.sleep(0.005)` every 25 tickets so Python-level work (normalization, TF-IDF) cannot
+  starve the event loop through the GIL (it is a thread, so `time.sleep`, not `asyncio.sleep`).
+  Live requests run inference in a thread pool, never on the event loop. `processed` never decreases.
 - **Polling.** `GET` returns status, counts, timestamps, `model_version`, `error`, and
   `Retry-After: 2` while `queued` or `running`. Polls read SQLite only (fast, independent of inference).
 - **Results.** `409` unless `succeeded`; `offset`/`limit` paging with `next_offset` (null on the last
@@ -401,13 +409,34 @@ release).
 
 - **Image.** Multi-stage Dockerfile, `python:3.12-slim`, only `requirements.txt` (CPU), artifacts copied
   in, non-root user, `PORT=8000`, `HEALTHCHECK` on `/health`, no `API_KEY` baked in, nothing downloaded at
-  runtime. `.dockerignore` keeps `.env`, data and docs out.
+  runtime. `.dockerignore` keeps `.env`, data and docs out. The image does **not** install
+  `transformers` or `huggingface_hub` (runtime uses only `tokenizers` + `onnxruntime`, which never touch
+  the network), and sets `HF_HUB_OFFLINE=1`, `TRANSFORMERS_OFFLINE=1`, `TOKENIZERS_PARALLELISM=false` as
+  belt and braces. The real proof is the `--network none` start test.
 - **Startup.** The HTTP server starts listening immediately; the model loads in a background thread.
   `/health` is 503 while loading, 200 when ready (target well under 120 s).
 - **VM.** Azure Ubuntu, 2 vCPU / 4 GB (Standard_B2s class), static public IP, DNS label
   `<label>.<region>.cloudapp.azure.com`, NSG open for 80/443 and SSH from our IP only.
-- **TLS.** Caddy terminates HTTPS (automatic Let's Encrypt) and proxies to `127.0.0.1:8000`; request body
-  limit above 25 MB, long read timeouts, so error bodies always come from the app.
+- **TLS.** Caddy terminates HTTPS (automatic Let's Encrypt) and proxies to `127.0.0.1:8000`. Caddy has no
+  default body cap, but anything above whatever cap we set gets Caddy's own plain-text 413, not our JSON
+  one. So the proxy cap sits far above the app's 25 MB limit and the app answers every oversized body
+  with a JSON 413:
+
+  ```caddyfile
+  <label>.<region>.cloudapp.azure.com {
+      request_body {
+          max_size 64MB
+      }
+      reverse_proxy 127.0.0.1:8000 {
+          transport http {
+              response_header_timeout 120s
+          }
+      }
+  }
+  ```
+
+  Verified in WP9 by sending bodies of 1 MB+1, 5 MB+1, 25 MB+1 and 40 MB through the proxy and checking
+  that each gets a JSON 413 from the app.
 - **Run.** `docker run -d --restart unless-stopped -p 127.0.0.1:8000:8000 --env-file /etc/tensorforge/env
   -v tf_data:/data <image@digest>`. The env file is root-only. Docker and Caddy start on boot. An
   external uptime monitor pings `/health`.
