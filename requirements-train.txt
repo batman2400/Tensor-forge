@@ -1,0 +1,28 @@
+# Local training / research environment (Python 3.12 + CUDA PyTorch).
+# Install order (scripts/setup_env.ps1 automates it):
+#   1. uv pip install -r requirements-torch-cu126.txt
+#   2. uv pip install -r requirements-train.txt -r requirements-dev.txt
+-r requirements.txt
+
+# Data and analysis
+pandas>=2.2
+matplotlib>=3.9
+seaborn>=0.13
+tqdm>=4.66
+pyyaml>=6.0
+jsonschema>=4.23
+
+# Models
+lightgbm>=4.5
+transformers>=4.46
+sentencepiece>=0.2
+safetensors>=0.4
+accelerate>=1.0
+
+# ONNX export + int8 quantization for the CPU service
+onnx>=1.17
+onnxscript>=0.1
+
+# Notebooks
+jupyterlab>=4.2
+ipykernel>=6.29

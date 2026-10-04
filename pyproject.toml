@@ -1,0 +1,26 @@
+# Tooling configuration only (the service is not packaged as a library).
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["data", "artifacts", "ml/runs", "ml/cache"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "S"]
+ignore = [
+  "E501",  # line length handled by the formatter
+  "S101",  # assert is fine in tests
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S"]
+"scripts/*" = ["S603", "S607"]  # scripts intentionally call git
+"ml/*" = ["S301", "S403"]       # joblib/pickle of our own artifacts
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+markers = [
+  "hosted: runs against TF_BASE_URL (the deployed service); skipped when unset",
+  "slow: long-running tests such as the 5,000-ticket job",
+]

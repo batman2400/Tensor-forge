@@ -1,0 +1,14 @@
+{
+  "python.defaultInterpreterPath": "${userHome}/.venvs/tensorforge/Scripts/python.exe",
+  "python.terminal.activateEnvironment": true,
+  "files.eol": "\n",
+  "files.encoding": "utf8",
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/.pytest_cache": true,
+    "**/.ruff_cache": true
+  },
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff"
+  }
+}

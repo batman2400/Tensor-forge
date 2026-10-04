@@ -1,0 +1,8 @@
+# Test and quality tooling
+pytest>=8.3
+httpx>=0.27
+anyio>=4.6
+ruff>=0.7
+nbstripout>=0.8
+pyyaml>=6.0
+jsonschema>=4.23

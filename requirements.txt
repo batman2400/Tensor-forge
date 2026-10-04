@@ -1,0 +1,14 @@
+# Runtime dependencies for the inference service (what goes into the Docker image).
+# Target: Python 3.12, CPU only, no internet at runtime. Keep this list small and pinned.
+# Training / research tools live in requirements-train.txt; the full local lock is
+# requirements-train.lock.txt. Add lightgbm here only if it ends up in the final ensemble.
+fastapi==0.142.2
+uvicorn[standard]==0.54.0
+pydantic==2.13.5
+orjson==3.12.0
+numpy==2.5.2
+scipy==1.18.1
+scikit-learn==1.9.1
+joblib==1.6.0
+onnxruntime==1.30.0
+tokenizers==0.23.2

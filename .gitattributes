@@ -1,0 +1,16 @@
+# Normalize line endings: LF in the repo so shell hooks and Docker work on Windows too.
+* text=auto eol=lf
+
+# Shell scripts and git hooks must stay LF
+*.sh text eol=lf
+.githooks/* text eol=lf
+
+# PowerShell scripts: Windows-native
+*.ps1 text eol=crlf
+
+# Binary
+*.png binary
+*.jpg binary
+*.onnx binary
+*.joblib binary
+*.pkl binary

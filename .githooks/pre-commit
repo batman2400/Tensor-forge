@@ -1,0 +1,30 @@
+#!/bin/sh
+# Blocks commits containing the TensorForge API key (tf2_...), .env files or
+# organizer dataset files. Enabled via: git config core.hooksPath .githooks
+# (scripts/setup_env.ps1 and scripts/install_hooks.sh do this for you).
+
+ROOT="$(git rev-parse --show-toplevel)"
+cd "$ROOT" || exit 1
+
+run_check() {
+  # Try the project venv first, then whatever Python is on PATH.
+  for py in \
+    "$ROOT/.venv/Scripts/python.exe" \
+    "$ROOT/.venv/bin/python" \
+    "$USERPROFILE/.venvs/tensorforge/Scripts/python.exe" \
+    "$HOME/.venvs/tensorforge/bin/python" \
+    python3 python; do
+    if command -v "$py" >/dev/null 2>&1 || [ -x "$py" ]; then
+      "$py" scripts/check_secrets.py "$@"
+      return $?
+    fi
+  done
+  if command -v py >/dev/null 2>&1; then
+    py -3 scripts/check_secrets.py "$@"
+    return $?
+  fi
+  echo "pre-commit: no Python found; refusing to commit without a secret scan." >&2
+  return 1
+}
+
+run_check --staged

@@ -1,0 +1,27 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  hygiene:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Secret scan (tf2_ keys, .env, dataset files)
+        run: python scripts/check_secrets.py --all
+
+      - name: Install lightweight tooling
+        run: pip install pyyaml jsonschema ruff
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Verify spec and schemas (dataset is not in the public repo)
+        run: python scripts/verify_assets.py --no-data
