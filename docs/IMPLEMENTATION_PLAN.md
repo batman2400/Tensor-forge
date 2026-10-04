@@ -216,16 +216,22 @@ Docker offline run, hosted deployment, training story, report, video.
 
 ---
 
-## 6. Spec assumptions to verify early (Day 1)
+## 6. Spec ambiguities: decided (no need to ask the organizers)
 
-1. Whether the harness sends extra fields like `language` (we ignore extra properties).
-2. Exact behavior expected for `HEAD /health` (we support GET and HEAD).
-3. Behavior for a wrong method on a protected path with no key (we answer 401 first).
-4. Idempotency key reuse with a different payload (we return the original job).
-5. Reference hardware is "to be confirmed" in the spec; we budget for 2 vCPU / 4 GB.
-6. Whether `confidence` needs to relate to `is_urgent` or secondary (spec says primary category only).
+Each of these is safe whatever the organizers would answer, so we implement the default and document it
+in the README. Only ask the organizers if something *blocks* a decision.
 
-If any assumption is risky, ask the organizers through the official channel and note the answer here.
+| Topic | Decision |
+| --- | --- |
+| Extra request fields such as `language` | Accepted and ignored. If present it is `Optional[str] = None` style: never required, never validated beyond "ignore", never a model feature (the spec says the model sees only channel, subject, text). Must not crash when omitted. |
+| `HEAD /health` | Supported together with `GET /health`. |
+| Wrong method on a protected path without a key | 401 first (auth before anything else). 405 JSON only when the key is valid. |
+| `Idempotency-Key` reused with a different payload | Return the original job (202, same `job_id`); never create a duplicate. |
+| Reference hardware ("to be confirmed" in the spec) | Assume 2 vCPU / 4 GB (Standard_B2s), no GPU. |
+| `confidence` meaning | Calibrated probability of the primary `category` only (schema text). `needs_human_review` is the optional bonus field: set when confidence is below a documented threshold. |
+
+Rule of thumb: ask the organizers only when a wrong guess would lose points *and* we cannot pick a
+default that is safe under every plausible answer.
 
 ---
 
