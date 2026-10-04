@@ -1,0 +1,71 @@
+.unlock-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 65vh;
+  padding: 20px 0;
+}
+
+.unlock-card {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  padding: 36px 32px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.unlock-card h1 {
+  font: 500 24px var(--serif);
+  margin: 0 0 8px;
+}
+
+.unlock-subtitle {
+  font: 400 13px var(--mono);
+  color: var(--muted);
+  margin-bottom: 24px;
+}
+
+.unlock-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.unlock-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.unlock-input {
+  font: 400 14px var(--mono);
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  border-bottom: 1px solid var(--ink);
+  padding: 10px 12px;
+  border-radius: 2px;
+  width: 100%;
+}
+
+.unlock-input:focus {
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+}
+
+.unlock-help {
+  font: 400 11px var(--mono);
+  color: var(--muted);
+}
+
+.unlock-footer {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font: 400 11px var(--mono);
+  color: var(--muted);
+}

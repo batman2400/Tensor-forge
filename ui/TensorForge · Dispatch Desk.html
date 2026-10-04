@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TensorForge · Dispatch Desk</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,wght@0,400;0,500;1,400&display=swap">
+<style>
+:root{--paper:#f6f1e7;--card:#fbf8f1;--ink:#1b1a17;--muted:#6f6a5f;--rule:#cfc8b8;--stamp:#c8321e;
+--serif:'Newsreader',Georgia,serif;--sans:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#14130f;--card:#1b1a15;--ink:#efe8d8;--muted:#9a9384;--rule:#3a372e;--stamp:#ee5a42}}
+:root[data-theme="dark"]{--paper:#14130f;--card:#1b1a15;--ink:#efe8d8;--muted:#9a9384;--rule:#3a372e;--stamp:#ee5a42}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 var(--sans)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px 80px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:22px 0;border-bottom:2px solid var(--ink)}
+.brand{font:500 26px var(--serif);letter-spacing:-.01em}
+.brand small{font:400 11px var(--mono);color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin-left:10px}
+.hl{display:flex;align-items:center;gap:14px;font:400 12px var(--mono);color:var(--muted)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ink);margin-right:6px}
+button{font:500 13px var(--sans);cursor:pointer;color:var(--ink);background:none;border:1px solid var(--ink);padding:8px 14px;border-radius:2px}
+button:hover{background:var(--ink);color:var(--paper)}
+button.primary{background:var(--ink);color:var(--paper)}button.primary:hover{opacity:.85}
+button:disabled{opacity:.35;cursor:default}
+section{padding:36px 0;border-bottom:1px solid var(--rule)}
+h2{margin:0 0 4px;font:500 22px var(--serif)}
+h2 span{font:400 11px var(--mono);color:var(--muted);margin-right:10px;letter-spacing:.1em}
+.ep{font:400 12px var(--mono);color:var(--muted);margin:0 0 18px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}}
+textarea{width:100%;min-height:150px;resize:vertical;background:var(--card);color:var(--ink);border:1px solid var(--rule);border-bottom:1px solid var(--ink);padding:12px 14px;font:400 17px/1.55 var(--serif);border-radius:0}
+textarea:focus{outline:2px solid var(--ink);outline-offset:1px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 14px}
+.chips button{font:400 12px var(--mono);border-color:var(--rule);color:var(--muted);padding:5px 9px}
+.card{background:var(--card);border:1px solid var(--rule);padding:20px;min-height:230px;position:relative}
+.empty{color:var(--muted);font:italic 400 16px var(--serif);display:grid;place-items:center;height:190px;text-align:center}
+.lbl{font:400 10px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.stamp{display:inline-block;border:2.5px solid var(--ink);padding:6px 14px;font:500 17px var(--mono);letter-spacing:.06em;text-transform:uppercase;transform:rotate(-2deg);animation:stamp .32s cubic-bezier(.2,1.4,.4,1) both}
+.stamp.u{border-color:var(--stamp);color:var(--stamp);transform:rotate(4deg);font-size:13px;margin-left:14px;animation-delay:.18s}
+@keyframes stamp{from{opacity:0;transform:scale(1.7) rotate(-8deg)}}
+.route{margin:16px 0;font:400 20px var(--serif)}.route i{color:var(--muted);font-style:normal;margin-right:8px}
+.tag{display:inline-block;font:400 12px var(--mono);border:1px solid var(--rule);color:var(--muted);padding:2px 8px}
+.conf{display:flex;align-items:center;gap:12px;margin:16px 0 4px}
+.track{flex:1;height:3px;background:var(--rule)}.fill{height:3px;background:var(--ink);transition:width .7s ease-out;width:0}
+.conf b{font:500 14px var(--mono)}
+.meta{display:flex;justify-content:space-between;align-items:center;margin-top:14px;font:400 11px var(--mono);color:var(--muted)}
+.meta button{border:none;border-bottom:1px solid var(--muted);border-radius:0;padding:0;font:400 11px var(--mono);color:var(--muted)}
+.meta button:hover{background:none;color:var(--ink)}
+pre{margin:12px 0 0;padding:12px;background:var(--paper);border:1px dashed var(--rule);font:400 12px/1.5 var(--mono);overflow-x:auto;white-space:pre}
+.bar{display:flex;gap:16px;align-items:center;justify-content:space-between;margin:14px 0 10px;flex-wrap:wrap}
+.bar label{font:400 12px var(--mono);color:var(--muted);cursor:pointer}
+.tw{overflow-x:auto;border-top:2px solid var(--ink)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{font:400 10px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:left;padding:10px 12px 8px 0;border-bottom:1px solid var(--ink);cursor:pointer;white-space:nowrap}
+td{padding:10px 12px 10px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+td.t{font:400 15px var(--serif);min-width:260px}td.m{font:400 12px var(--mono);white-space:nowrap}
+.urg{color:var(--stamp);font:500 11px var(--mono);letter-spacing:.08em;border:1.5px solid var(--stamp);padding:1px 6px;transform:rotate(-2deg);display:inline-block}
+.job{background:var(--card);border:1px solid var(--rule);padding:20px}
+.jrow{display:flex;justify-content:space-between;font:400 12px var(--mono);color:var(--muted);margin-bottom:10px;flex-wrap:wrap;gap:8px}
+.jt{height:6px;background:var(--rule)}.jf{height:6px;background:var(--ink);width:0;transition:width .6s linear}
+.jfoot{display:flex;justify-content:space-between;align-items:center;margin-top:16px;gap:12px;flex-wrap:wrap}
+.note{font:italic 400 14px var(--serif);color:var(--muted)}
+footer{padding-top:24px;font:400 11px var(--mono);color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="brand">TensorForge<small>Dispatch Desk</small></div>
+  <div class="hl"><span id="health"><span class="dot"></span>model loaded · v2.0 · cpu</span><button id="theme" aria-label="Toggle theme">Dark</button></div>
+</header>
+
+<section>
+  <h2><span>01</span>Single ticket</h2>
+  <p class="ep">POST /predict</p>
+  <div class="grid">
+    <div>
+      <div class="lbl">Incoming ticket</div>
+      <textarea id="one" placeholder="Paste a customer support ticket…"></textarea>
+      <div class="chips" id="chips"></div>
+      <button class="primary" id="go">Classify ticket</button>
+    </div>
+    <div class="card" id="res"><div class="empty">Nothing on the desk yet.<br>Pick a sample or paste a ticket.</div></div>
+  </div>
+</section>
+
+<section>
+  <h2><span>02</span>Batch</h2>
+  <p class="ep">POST /predict/batch · 1–100 tickets, one per line</p>
+  <textarea id="many" style="min-height:130px;font-size:15px"></textarea>
+  <div class="bar">
+    <button class="primary" id="runb">Classify batch</button>
+    <label><input type="checkbox" id="uo"> Urgent only</label>
+  </div>
+  <div class="tw"><table><thead><tr>
+    <th data-k="i">#</th><th data-k="text">Ticket</th><th data-k="category">Category</th><th data-k="team">Team</th><th data-k="secondary_category">Secondary</th><th data-k="is_urgent">Urgent</th><th data-k="confidence">Conf.</th>
+  </tr></thead><tbody id="tb"></tbody></table></div>
+</section>
+
+<section>
+  <h2><span>03</span>Async job</h2>
+  <p class="ep">POST /batch/jobs · up to 5,000 tickets · polled until complete</p>
+  <div class="job">
+    <div class="lbl">Upload tickets (.csv / .jsonl)</div>
+    <div style="border:1px dashed var(--muted);padding:22px;text-align:center;font:italic 400 16px var(--serif);color:var(--muted);margin-bottom:16px">Drop a file here — demo uses 1,200 sample tickets</div>
+    <div class="jrow"><span id="jid">job: —</span><span id="jst">idle</span><span id="jct">0 / 1,200</span></div>
+    <div class="jt"><div class="jf" id="jf"></div></div>
+    <div class="jfoot"><span class="note" id="jn">Submit a job to begin.</span>
+      <span><button class="primary" id="sub">Submit job</button> <button id="dl" disabled>Download results</button></span></div>
+  </div>
+</section>
+<footer>Mock responses — swap <code>predict()</code> for fetch() calls to your FastAPI endpoints. Category and team names are placeholders.</footer>
+</div>
+
+<script>
+const API=null; // e.g. "http://localhost:8000"; null = mock mode
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const R=[[/refund|charged|payment|card|billed|price/i,'payment_issue','Payments'],
+[/late|waiting|never arrived|delay|eta/i,'delivery_delay','Dispatch Ops'],
+[/rude|driver|behav|harass|unsafe|accident/i,'safety_conduct','Trust & Safety'],
+[/missing|wrong item|cold|spilled|order/i,'order_problem','Restaurant Support'],
+[/login|password|account|otp|locked/i,'account_access','Account Support'],
+[/crash|bug|app|freez|error/i,'app_bug','Engineering']];
+const URG=/unsafe|accident|harass|threat|emergency|stranded|charged twice|fraud/i;
+const SECOND=[[/refund|charged/i,'payment_issue'],[/late|delay/i,'delivery_delay'],[/rude|driver/i,'safety_conduct']];
+function predict(t){
+  let c='general_inquiry',team='Customer Care';
+  for(const [re,k,tm] of R) if(re.test(t)){c=k;team=tm;break}
+  const s=SECOND.find(([re,k])=>re.test(t)&&k!==c);
+  let h=0;for(const ch of t)h=(h*31+ch.charCodeAt(0))%1000;
+  return {category:c,team,secondary_category:s?s[1]:null,is_urgent:URG.test(t),confidence:+(0.78+h/1000*0.2).toFixed(2),latency_ms:12+h%30};
+}
+const SAMPLES=[
+ ['Double charge','I was charged twice for my ride last night and need a refund right away.'],
+ ['Late food','My order has been late for over an hour and the driver is not picking up.'],
+ ['Unsafe driver','The driver was driving unsafe and rude, I felt in danger during the whole trip.'],
+ ['Login','I cannot login, the OTP never arrives and my account is locked.']];
+SAMPLES.forEach(([n,t])=>{const b=document.createElement('button');b.textContent=n;b.onclick=()=>{$('one').value=t;classify()};$('chips').appendChild(b)});
+$('go').onclick=classify;
+let showJson=false,last=null;
+function classify(){
+  const t=$('one').value.trim();if(!t)return;
+  last=predict(t);last.t=t;render();
+}
+function render(){
+  const r=last,pretty=r.category.replace(/_/g,' ');
+  const body={ticket_id:'demo-001',...Object.fromEntries(['category','secondary_category','is_urgent','confidence'].map(k=>[k,r[k]]))};
+  $('res').innerHTML=`<div class="lbl">Stamped as</div>
+  <div><span class="stamp">${esc(pretty)}</span>${r.is_urgent?'<span class="stamp u">Urgent</span>':''}</div>
+  <div class="route"><i>→</i>${esc(r.team)}</div>
+  <div class="lbl">Secondary</div><span class="tag">${r.secondary_category?esc(r.secondary_category.replace(/_/g,' ')):'none'}</span>
+  <div class="conf"><div class="lbl" style="margin:0">Confidence</div><div class="track"><div class="fill" id="cf"></div></div><b>${(r.confidence*100).toFixed(0)}%</b></div>
+  <div class="meta"><span>${r.latency_ms} ms · calibrated probability</span><button id="tj">${showJson?'hide':'view'} JSON / cURL</button></div>
+  ${showJson?`<pre>${esc(JSON.stringify(body,null,2))}\n\ncurl -X POST $API/predict \\\n  -H 'Content-Type: application/json' \\\n  -d '{"text":"${esc(r.t.slice(0,40))}…"}'</pre>`:''}`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{const f=$('cf');if(f)f.style.width=r.confidence*100+'%'}));
+  $('tj').onclick=()=>{showJson=!showJson;render()};
+}
+// batch
+$('many').value=SAMPLES.map(s=>s[1]).concat(['The app freezes every time I open the map screen.','Wrong item delivered and the fries were cold.','Please explain how your loyalty points work.','Driver threatened me at pickup, I am stranded and scared.']).join('\n');
+let rows=[],sk='i',sd=1;
+$('runb').onclick=()=>{rows=$('many').value.split('\n').map(s=>s.trim()).filter(Boolean).slice(0,100).map((t,i)=>({i:i+1,text:t,...predict(t)}));draw()};
+$('uo').onchange=draw;
+document.querySelectorAll('th').forEach(th=>th.onclick=()=>{const k=th.dataset.k;sd=sk===k?-sd:1;sk=k;draw()});
+function draw(){
+  let v=rows.filter(r=>!$('uo').checked||r.is_urgent).sort((a,b)=>(a[sk]>b[sk]?1:a[sk]<b[sk]?-1:0)*sd);
+  $('tb').innerHTML=v.map(r=>`<tr><td class="m">${r.i}</td><td class="t">${esc(r.text)}</td><td class="m">${esc(r.category)}</td><td>${esc(r.team)}</td><td class="m">${r.secondary_category||'—'}</td><td>${r.is_urgent?'<span class="urg">URGENT</span>':''}</td><td class="m">${(r.confidence*100).toFixed(0)}%</td></tr>`).join('')||'<tr><td colspan="7" class="note" style="padding:24px 0">No tickets to show.</td></tr>';
+}
+$('runb').click();
+// async job
+let timer;
+$('sub').onclick=()=>{
+  clearInterval(timer);let n=0;const T=1200;
+  $('jid').textContent='job: '+Math.random().toString(36).slice(2,10);
+  $('jst').textContent='queued';$('dl').disabled=true;$('jn').textContent='Polling every second…';
+  timer=setInterval(()=>{
+    n=Math.min(T,n+Math.round(60+Math.random()*120));
+    $('jf').style.width=n/T*100+'%';$('jct').textContent=n.toLocaleString()+' / 1,200';
+    $('jst').textContent=n<T?'running':'completed';
+    if(n>=T){clearInterval(timer);$('dl').disabled=false;$('jn').textContent='Stamped and filed. Results are ready.'}
+  },700);
+};
+// theme
+const root=document.documentElement;
+function dark(){return root.dataset.theme?root.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches}
+function lab(){$('theme').textContent=dark()?'Light':'Dark'}
+$('theme').onclick=()=>{root.dataset.theme=dark()?'light':'dark';lab()};lab();
+</script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+@media (max-width: 760px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.channel-selector {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.channel-btn {
+  font: 400 11px var(--mono);
+  padding: 4px 10px;
+  border: 1px solid var(--rule);
+  color: var(--muted);
+  background: var(--paper);
+  border-radius: 2px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.channel-btn.active {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+.subject-input-wrapper {
+  margin-bottom: 10px;
+}
+
+.subject-input {
+  width: 100%;
+  font: 400 14px var(--sans);
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  border-bottom: 1px solid var(--ink);
+  padding: 8px 12px;
+  border-radius: 0;
+}
+
+.subject-input:focus {
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+}
+
+textarea.ticket-input {
+  width: 100%;
+  min-height: 150px;
+  resize: vertical;
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  border-bottom: 1px solid var(--ink);
+  padding: 12px 14px;
+  font: 400 17px/1.55 var(--serif);
+  border-radius: 0;
+}
+
+textarea.ticket-input:focus {
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0 14px;
+}
+
+.chips button {
+  font: 400 12px var(--mono);
+  border-color: var(--rule);
+  color: var(--muted);
+  padding: 5px 9px;
+  background: transparent;
+}
+
+.chips button:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}

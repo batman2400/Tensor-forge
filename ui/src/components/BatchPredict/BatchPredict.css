@@ -1,0 +1,51 @@
+.batch-textarea {
+  width: 100%;
+  min-height: 130px;
+  resize: vertical;
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  border-bottom: 1px solid var(--ink);
+  padding: 12px 14px;
+  font: 400 15px/1.55 var(--sans);
+  border-radius: 0;
+}
+
+.batch-textarea:focus {
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+}
+
+.bar {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  margin: 14px 0 10px;
+  flex-wrap: wrap;
+}
+
+.bar label {
+  font: 400 12px var(--mono);
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ticket-count {
+  font: 400 12px var(--mono);
+  color: var(--muted);
+}
+
+.ticket-count.over-limit {
+  color: var(--stamp);
+  font-weight: 500;
+}
+
+.batch-actions-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}

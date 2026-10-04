@@ -1,0 +1,220 @@
+/* Font Imports (Self-hosted woff2 from @fontsource packages) */
+@import '@fontsource-variable/inter';
+@import '@fontsource/newsreader/400.css';
+@import '@fontsource/newsreader/500.css';
+@import '@fontsource/newsreader/400-italic.css';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+
+/* Design System Tokens */
+:root {
+  /* Light theme */
+  --paper: #f6f1e7;
+  --card: #fbf8f1;
+  --ink: #1b1a17;
+  --muted: #6f6a5f;
+  --rule: #cfc8b8;
+  --stamp: #c8321e;
+  --success: #2e7d32;
+  --error-bg: #fbeae8;
+  --focus-ring: rgba(27, 26, 23, 0.4);
+
+  --serif: 'Newsreader', Georgia, serif;
+  --sans: 'Inter Variable', 'Inter', system-ui, -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  box-sizing: border-box;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #14130f;
+    --card: #1b1a15;
+    --ink: #efe8d8;
+    --muted: #9a9384;
+    --rule: #3a372e;
+    --stamp: #ee5a42;
+    --success: #4caf50;
+    --error-bg: #2d1815;
+    --focus-ring: rgba(239, 232, 216, 0.4);
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper: #14130f;
+  --card: #1b1a15;
+  --ink: #efe8d8;
+  --muted: #9a9384;
+  --rule: #3a372e;
+  --stamp: #ee5a42;
+  --success: #4caf50;
+  --error-bg: #2d1815;
+  --focus-ring: rgba(239, 232, 216, 0.4);
+}
+
+:root[data-theme="light"] {
+  --paper: #f6f1e7;
+  --card: #fbf8f1;
+  --ink: #1b1a17;
+  --muted: #6f6a5f;
+  --rule: #cfc8b8;
+  --stamp: #c8321e;
+  --success: #2e7d32;
+  --error-bg: #fbeae8;
+  --focus-ring: rgba(27, 26, 23, 0.4);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 15px/1.5 var(--sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Accessibility: focus outlines */
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* App shell wrapper */
+.wrap {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+/* Common form elements */
+button {
+  font: 500 13px var(--sans);
+  cursor: pointer;
+  color: var(--ink);
+  background: none;
+  border: 1px solid var(--ink);
+  padding: 8px 14px;
+  border-radius: 2px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+button:hover:not(:disabled) {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+button.primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+button.primary:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+button.ghost {
+  border: none;
+  padding: 6px 10px;
+  color: var(--muted);
+}
+
+button.ghost:hover:not(:disabled) {
+  background: rgba(111, 106, 95, 0.15);
+  color: var(--ink);
+}
+
+/* Sections */
+section {
+  padding: 36px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+h1, h2, h3 {
+  margin: 0 0 4px;
+  font: 500 22px var(--serif);
+}
+
+h2 span {
+  font: 400 11px var(--mono);
+  color: var(--muted);
+  margin-right: 10px;
+  letter-spacing: 0.1em;
+}
+
+.ep {
+  font: 400 12px var(--mono);
+  color: var(--muted);
+  margin: 0 0 18px;
+}
+
+.lbl {
+  font: 400 10px var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  padding: 20px;
+  min-height: 230px;
+  position: relative;
+}
+
+/* Animations */
+@keyframes stampIn {
+  from {
+    opacity: 0;
+    transform: scale(1.7) rotate(-8deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(-2deg);
+  }
+}
+
+@keyframes urgentStampIn {
+  from {
+    opacity: 0;
+    transform: scale(1.7) rotate(-8deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(4deg);
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .stamp, .stamp.u, .jf, .fill {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Utility footer */
+footer.desk-footer {
+  padding-top: 24px;
+  font: 400 11px var(--mono);
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
