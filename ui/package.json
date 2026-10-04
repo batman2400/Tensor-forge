@@ -1,0 +1,41 @@
+{
+  "name": "tensorforge-ui",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -k -n \"mock,vite\" -c \"yellow,cyan\" \"npm run mock\" \"vite\"",
+    "dev:ui": "vite",
+    "dev:real": "vite",
+    "mock": "tsx mock/server.ts",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "^5.1.1",
+    "@fontsource/jetbrains-mono": "^5.1.1",
+    "@fontsource/newsreader": "^5.1.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.4",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.2",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "jsdom": "^26.0.0",
+    "tsx": "^4.19.3",
+    "typescript": "~5.7.2",
+    "vite": "^6.1.0",
+    "vitest": "^3.0.5"
+  }
+}

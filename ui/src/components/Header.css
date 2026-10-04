@@ -1,0 +1,65 @@
+.desk-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 22px 0;
+  border-bottom: 2px solid var(--ink);
+}
+
+.brand {
+  font: 500 26px var(--serif);
+  letter-spacing: -0.01em;
+}
+
+.brand small {
+  font: 400 11px var(--mono);
+  color: var(--muted);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-left: 10px;
+}
+
+.hl {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font: 400 12px var(--mono);
+  color: var(--muted);
+}
+
+.health-status {
+  display: inline-flex;
+  align-items: center;
+}
+
+.health-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ink);
+  margin-right: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.health-dot.online {
+  background: var(--success);
+}
+
+.health-dot.offline {
+  background: var(--stamp);
+}
+
+.actions-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lock-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}

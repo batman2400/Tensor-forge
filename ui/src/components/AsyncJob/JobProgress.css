@@ -1,0 +1,54 @@
+.jrow {
+  display: flex;
+  justify-content: space-between;
+  font: 400 12px var(--mono);
+  color: var(--muted);
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.jrow-status {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}
+
+.jrow-status.succeeded {
+  color: var(--success);
+}
+
+.jrow-status.failed {
+  color: var(--stamp);
+}
+
+.jrow-status.running {
+  color: var(--ink);
+}
+
+.jt {
+  height: 6px;
+  background: var(--rule);
+  width: 100%;
+}
+
+.jf {
+  height: 6px;
+  background: var(--ink);
+  width: 0;
+  transition: width 0.6s linear;
+}
+
+.jfoot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.note {
+  font: italic 400 14px var(--serif);
+  color: var(--muted);
+}
