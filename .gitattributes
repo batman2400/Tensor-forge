@@ -14,3 +14,6 @@
 *.onnx binary
 *.joblib binary
 *.pkl binary
+
+# Over GitHub's 100 MB limit. Must stay after "*.onnx binary" so the LFS filter wins.
+artifacts/encoder.int8.onnx filter=lfs diff=lfs merge=lfs -text

@@ -51,10 +51,12 @@ Files the build copies from `artifacts/`:
 | --- | --- |
 | `manifest.json` | yes |
 | `fusion.json` | yes |
-| `classical.joblib` | no |
-| `tokenizer.json` | no |
-| `encoder_meta.json` | no |
-| `encoder.int8.onnx` | no (118 MB) |
+| `classical.joblib` | yes |
+| `tokenizer.json` | yes |
+| `encoder_meta.json` | yes |
+| `encoder.int8.onnx` | yes, via Git LFS (118 MB) |
+
+Clone with Git LFS installed (`git lfs install` once per machine). A clone without it checks out a small pointer file instead of the encoder, and `docker build` then fails the image self-test.
 
 `docker-compose.yml` is a local stand-in with a 2 CPU / 4 GB cap. Its image tag is `tensorforge:dev`; retag or edit it to match the tag you built.
 

@@ -1,0 +1,10 @@
+{
+  "model_name": "intfloat/multilingual-e5-small",
+  "checkpoint": "ml\\runs\\encoder_e5_final\\final\\model.pt",
+  "cls_id": 0,
+  "sep_id": 2,
+  "pad_id": 1,
+  "pad_to": null,
+  "smoke_weights": false,
+  "opset": 17
+}

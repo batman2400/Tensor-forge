@@ -54,6 +54,10 @@ artifacts/*
 !artifacts/README.md
 !artifacts/manifest.json
 !artifacts/fusion.json
+!artifacts/classical.joblib
+!artifacts/tokenizer.json
+!artifacts/encoder_meta.json
+!artifacts/encoder.int8.onnx
 
 # ---------------------------------------------------------------
 # Runtime state
