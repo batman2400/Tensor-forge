@@ -17,3 +17,10 @@
 
 # Over GitHub's 100 MB limit. Must stay after "*.onnx binary" so the LFS filter wins.
 artifacts/encoder.int8.onnx filter=lfs diff=lfs merge=lfs -text
+
+# The manifest hashes these as raw bytes. text=auto rewrites CRLF on commit and a
+# fresh checkout then fails Engine.load() with "hash mismatch for fusion.json".
+artifacts/fusion.json -text -eol
+artifacts/encoder_meta.json -text -eol
+artifacts/tokenizer.json -text -eol
+artifacts/manifest.json -text -eol

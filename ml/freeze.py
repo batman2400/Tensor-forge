@@ -70,6 +70,7 @@ def build(encoder_enabled: bool = False) -> dict:
         fusion_path.write_text(
             json.dumps({"settings": payload["settings"]}, indent=2) + "\n",
             encoding="utf-8",
+            newline="\n",
         )
     files = {"classical.joblib": file_sha256(classical)}
     if fusion_path.is_file():
@@ -106,7 +107,11 @@ def build(encoder_enabled: bool = False) -> dict:
 def write(encoder_enabled: bool = False) -> Path:
     manifest = build(encoder_enabled=encoder_enabled)
     path = ARTIFACTS / "manifest.json"
-    path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(manifest, indent=2) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
     return path
 
 
