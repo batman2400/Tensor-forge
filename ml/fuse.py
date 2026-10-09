@@ -3,7 +3,8 @@
 The mix is ``(1 - w) * classical + w * encoder`` after each branch is temperature
 scaled. Weights and temperatures are chosen on OOF rows only. Thresholds are then
 chosen on those fused OOF probabilities. Stage A (train fit, validation score) is
-scored once with the frozen settings and is the number to quote.
+scored once with the frozen settings. Because OOF tuning includes validation
+labels, Stage A is development validation, not an untouched holdout estimate.
 
 This does not replace ``artifacts/classical.joblib``.
 
@@ -251,7 +252,7 @@ def _write_report(settings: dict, stage_a: dict, classical_stage_a: dict) -> Non
         "# Fusion",
         "",
         "Weights are the encoder's share of a weighted average with `svc_word_char`.",
-        "They are fit on out-of-fold probabilities. Stage A below is the number to quote.",
+        "They are fit on out-of-fold probabilities and labels across all 4,800 records, including validation. Stage A below is tuning-exposed validation, not an untouched holdout estimate.",
         "The serving manifest fuses this with the final encoder (`artifacts/manifest.json`).",
         "",
         f"- Category encoder weight {weights['category']}, temperature {temperatures['category']}.",

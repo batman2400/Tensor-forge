@@ -180,6 +180,7 @@ class ContractMiddleware:
         request_id = _request_id(headers)
         scope["tf_tickets"] = 0
         body_state = {"complete": False}
+        body_timing: dict[str, float] = {}
         path = scope.get("path") or "/"
         method = scope.get("method", "GET").upper()
 
@@ -202,6 +203,7 @@ class ContractMiddleware:
             if method in {"POST", "PUT", "PATCH", "DELETE"} and not body_state["complete"]:
                 await _drain(receive)
                 body_state["complete"] = True
+                body_timing["done"] = time.perf_counter()
             await _send_json(send_wrapper, status, error_body(code, message), extra)
 
         try:
@@ -239,6 +241,7 @@ class ContractMiddleware:
                     )
                     return
                 body = await _read_body(receive, limit, body_state)
+                body_timing["done"] = time.perf_counter()
                 if body is None:
                     await reject(
                         413, "payload_too_large", "Request body exceeds the maximum allowed size."
@@ -263,7 +266,13 @@ class ContractMiddleware:
                     None,
                 )
         finally:
-            elapsed_ms = int((time.perf_counter() - started) * 1000)
+            finished = time.perf_counter()
+            elapsed_ms = int((finished - started) * 1000)
+            # Receiving the request body is dominated by the client's uplink. `service_ms` is
+            # the time after the body arrived, so a slow upload can be told apart from slow
+            # handling when reading these logs.
+            body_done = body_timing.get("done")
+            body_ms = 0 if body_done is None else int((body_done - started) * 1000)
             logger.info(
                 orjson.dumps(
                     {
@@ -272,6 +281,8 @@ class ContractMiddleware:
                         "path": path,
                         "status": status_holder["code"],
                         "duration_ms": elapsed_ms,
+                        "body_ms": body_ms,
+                        "service_ms": max(0, elapsed_ms - body_ms),
                         "ticket_count": scope.get("tf_tickets", 0),
                     }
                 ).decode()

@@ -131,3 +131,14 @@ def test_drain_is_bounded(monkeypatch):
     state = _run(_headers(length=1_000_000), 1_000_000)
     assert state["status"] == 413
     assert state["left_at_response"] > 0, "must stop reading at the cap, not read everything"
+
+
+def test_access_log_reports_body_and_service_time(caplog):
+    caplog.set_level("INFO", logger="tensorforge.access")
+    _run(_headers(key=None, length=200_000), 200_000)
+    entries = [json.loads(r.getMessage()) for r in caplog.records if r.name == "tensorforge.access"]
+    assert entries, "no access log entry"
+    entry = entries[-1]
+    assert entry["status"] == 401
+    assert entry["body_ms"] >= 0
+    assert entry["service_ms"] == entry["duration_ms"] - entry["body_ms"]

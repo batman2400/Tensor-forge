@@ -251,7 +251,7 @@ def main() -> int:
         )
     r = post("/predict", {"channel": "email", "text": "hello"})
     check(
-        r.status_code == 200 and "ticket_id" not in r.json() or r.json().get("ticket_id") is None,
+        r.status_code == 200 and r.json().get("ticket_id") is None,
         "predict without ticket_id ok",
     )
     r = post("/predict", {"channel": "chat", "text": "hi", "language": "si", "extra": {"a": 1}})
@@ -671,8 +671,8 @@ def main() -> int:
                 "429 has Retry-After + JSON",
             )
     check(
-        codes.count(202) >= 4 and 429 in codes[4:] + [429] if len(codes) > 4 else True,
-        "capacity: >=1 running + 3 queued accepted, rest 429",
+        codes.count(202) >= 4 and 429 in codes and all(code in (202, 429) for code in codes),
+        "capacity: at least four accepted and overflow observed as 429",
         str(codes),
     )
     print("  submit codes:", codes)

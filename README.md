@@ -27,7 +27,7 @@ sent as `X-API-Key` or `Authorization: Bearer`.
 
 The demo asks the visitor to paste the API key. The key is kept in that tab's session storage and is not in the page source.
 
-Held-out score, fit on the 4,000 training tickets and scored on the 800 validation tickets: fusion macro-F1 **0.802** (classical `svc_word_char` alone was 0.656). Quote this figure. A score computed on the full 4,800 tickets after the final fit is not a held-out result. Details are in [`ml/reports/fusion.md`](ml/reports/fusion.md) and [`ml/reports/g1.md`](ml/reports/g1.md).
+Stage A validation score: fusion macro-F1 **0.802** (classical `svc_word_char` alone was 0.656). The base models were fit on 4,000 training tickets and scored on 800 validation tickets, but fusion settings were selected using out-of-fold predictions and labels across all 4,800 records. This is therefore a tuning-exposed validation result, not an untouched holdout estimate. A score on the final model trained on all 4,800 tickets is in-sample. Details are in [`ml/reports/fusion.md`](ml/reports/fusion.md) and [`ml/reports/g1.md`](ml/reports/g1.md).
 
 ## Run the container
 
@@ -39,7 +39,7 @@ docker run -p 8000:8000 -e API_KEY=<key> tensorforge:verify
 
 `GET /health` returns 200 once the model has loaded (a few seconds, well under the 120 second limit). On this machine the same image also starts with `--network none`.
 
-Build it from this repo only when `artifacts/` already contains the frozen files listed below. `encoder.int8.onnx` is 118 MB, over GitHub's 100 MB file limit, so the weight files are not in git. `manifest.json` and `fusion.json` are.
+Build it from this repo only when `artifacts/` contains the frozen files listed below. `encoder.int8.onnx` is 118 MB, over GitHub's 100 MB regular-file limit, so it is stored using Git LFS. The other listed artifacts are tracked directly.
 
 ```bash
 docker build -t tensorforge:verify .

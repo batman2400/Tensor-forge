@@ -6,10 +6,10 @@ const SAMPLES = [
     text: "I was charged twice for last night's ride. Please refund the extra payment.",
   },
   {
-    language: "Singlish",
+    language: "Romanized Sinhala",
     channel: "chat",
     subject: "",
-    text: "Eh the food never come leh, already 40 min. Can refund or not?",
+    text: "mage order eka thama awe na, dan vinadi 40k. refund ekak denna puluwanda?",
   },
   {
     language: "Sinhala",
@@ -33,7 +33,7 @@ const SAMPLES = [
     language: "Mixed",
     channel: "email",
     subject: "Login code",
-    text: "OTP never arrived and I cannot log in. The ride receipt is also wrong.",
+    text: "OTP එක ආවේ නැහැ and I cannot log in. தயவு செய்து உதவுங்கள்.",
   },
 ];
 

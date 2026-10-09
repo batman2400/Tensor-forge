@@ -1,7 +1,7 @@
 # Fusion
 
 Weights are the encoder's share of a weighted average with `svc_word_char`.
-They are fit on out-of-fold probabilities. Stage A below is the number to quote.
+They are fit on out-of-fold probabilities and labels across all 4,800 records, including validation. Stage A below is tuning-exposed validation, not an untouched holdout estimate.
 The serving manifest fuses this with the final encoder (`artifacts/manifest.json`).
 
 - Category encoder weight 0.75, temperature 0.5.

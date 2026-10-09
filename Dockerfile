@@ -39,6 +39,14 @@ COPY artifacts/classical.joblib artifacts/fusion.json artifacts/manifest.json ar
 
 RUN python -c "from app.inference import Engine; engine = Engine.load(); assert engine.encoder is not None; assert str(engine.model_version).startswith('v1.0.0-'); pred = engine.predict({'channel': 'chat', 'subject': 'refund', 'text': 'my payment was charged twice'}); required = {'category', 'secondary_category', 'team', 'is_urgent', 'confidence', 'model_version'}; missing = required - set(pred); assert not missing, missing; assert pred['model_version'] == engine.model_version"
 
+# Build identity only. Pass --build-arg GIT_COMMIT=$(git rev-parse HEAD). No secrets here.
+ARG GIT_COMMIT=unknown
+ARG RELEASE_VERSION=unknown
+LABEL org.opencontainers.image.title="tensorforge" \
+      org.opencontainers.image.source="https://github.com/batman2400/Tensor-forge" \
+      org.opencontainers.image.revision="${GIT_COMMIT}" \
+      org.opencontainers.image.version="${RELEASE_VERSION}"
+
 USER app
 EXPOSE 8000
 
