@@ -15,11 +15,15 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["S"]
 "scripts/*" = ["S603", "S607"]  # scripts intentionally call git
+"*.ipynb" = ["S603"]            # Kaggle launcher cells run our own training script
 "ml/*" = ["S301", "S403"]       # joblib/pickle of our own artifacts
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+filterwarnings = [
+  "ignore:Using `httpx` with `starlette.testclient`",
+]
 markers = [
   "hosted: runs against TF_BASE_URL (the deployed service); skipped when unset",
   "slow: long-running tests such as the 5,000-ticket job",

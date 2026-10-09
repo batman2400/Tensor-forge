@@ -1,0 +1,36 @@
+{
+  "checkpoint_note": "The checkpoint is the final fit on all 4,800 tickets for 4 epochs, the stage-A best epoch. Batch 8 with 2 accumulation steps.",
+  "checkpoint": "ml\\runs\\encoder_e5_final\\final\\model.pt",
+  "fp32_path": "ml\\runs\\encoder_final_onnx\\encoder.fp32.onnx",
+  "int8_path": "ml\\runs\\encoder_final_onnx\\encoder.int8.onnx",
+  "tokenizer_path": "ml\\runs\\encoder_final_onnx\\tokenizer.json",
+  "fp32_bytes": 470262882,
+  "int8_bytes": 118089624,
+  "pad_gap_max_abs": 2.52288858693106e-07,
+  "pad_to": null,
+  "rss_bytes": 1741008896,
+  "cpu_count": 22,
+  "processor": "Intel64 Family 6 Model 170 Stepping 4, GenuineIntel",
+  "parity": {
+    "n": 200.0,
+    "fp32_category_max_abs": 5.159984125535644e-07,
+    "int8_category_max_abs": 0.190605989167477,
+    "int8_secondary_max_abs": 0.20694879459719506,
+    "int8_urgent_max_abs": 0.1449706016084218,
+    "int8_category_argmax_agreement": 1.0
+  },
+  "latency_validation": {
+    "n": 50.0,
+    "p50_ms": 15.924700011964887,
+    "p95_ms": 32.24993999901925,
+    "max_ms": 50.336700020125136
+  },
+  "latency_long": {
+    "n": 20.0,
+    "p50_ms": 61.92380000720732,
+    "p95_ms": 64.04892999271397,
+    "max_ms": 64.95770000037737
+  },
+  "parity_passed": false,
+  "gate_note": "The int8 file is 118.1 MB, above GitHub's 100 MB file limit, so it stays out of git and is copied into the image from the local artifacts directory. Parity below is against this checkpoint."
+}

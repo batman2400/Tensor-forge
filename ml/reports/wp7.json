@@ -1,0 +1,157 @@
+{
+  "base_url": "http://127.0.0.1:8001",
+  "model_version": "v1.0.0-38ecb9bd",
+  "startup_s": 4.58,
+  "predict": {
+    "n": 40.0,
+    "p50_ms": 27.674800003296696,
+    "p95_ms": 48.27251000097021,
+    "max_ms": 49.4155999913346
+  },
+  "batch_100": {
+    "count": 100,
+    "ms": 1932.814400002826,
+    "model_version": "v1.0.0-38ecb9bd"
+  },
+  "jobs": [
+    {
+      "total": 2000,
+      "processed": 2000,
+      "submit_ms": 54.64720001327805,
+      "health": {
+        "n": 27.0,
+        "p50_ms": 6.3541999843437225,
+        "p95_ms": 27.72118999855593,
+        "max_ms": 28.46470000804402
+      },
+      "poll": {
+        "n": 27.0,
+        "p50_ms": 5.906900012632832,
+        "p95_ms": 19.165429996792223,
+        "max_ms": 26.684799988288432
+      },
+      "memory_mib_max": 558.2,
+      "model_version": "v1.0.0-38ecb9bd",
+      "wall_s": 53.30190720001701
+    },
+    {
+      "total": 5000,
+      "processed": 5000,
+      "submit_ms": 53.92020000726916,
+      "health": {
+        "n": 64.0,
+        "p50_ms": 7.965750017319806,
+        "p95_ms": 26.36270001676166,
+        "max_ms": 27.822000003652647
+      },
+      "poll": {
+        "n": 64.0,
+        "p50_ms": 3.260699988459237,
+        "p95_ms": 26.402355017489754,
+        "max_ms": 30.936600000131875
+      },
+      "memory_mib_max": 563.1,
+      "model_version": "v1.0.0-38ecb9bd",
+      "wall_s": 128.43054120001034
+    }
+  ],
+  "fuzz": [
+    {
+      "name": "unknown route",
+      "status": 404,
+      "ms": 2.6,
+      "json": true
+    },
+    {
+      "name": "predict without key",
+      "status": 401,
+      "ms": 1.6,
+      "json": true
+    },
+    {
+      "name": "wrong content type",
+      "status": 415,
+      "ms": 1.7,
+      "json": true
+    },
+    {
+      "name": "random bytes",
+      "status": 400,
+      "ms": 1.9,
+      "json": true
+    },
+    {
+      "name": "non-utf8",
+      "status": 400,
+      "ms": 1.9,
+      "json": true
+    },
+    {
+      "name": "10k text",
+      "status": 200,
+      "ms": 96.7,
+      "json": true
+    },
+    {
+      "name": "10001 chars",
+      "status": 422,
+      "ms": 2.2,
+      "json": true
+    },
+    {
+      "name": "injection",
+      "status": 200,
+      "ms": 14.4,
+      "json": true
+    },
+    {
+      "name": "emoji",
+      "status": 200,
+      "ms": 26.7,
+      "json": true
+    },
+    {
+      "name": "control characters",
+      "status": 200,
+      "ms": 12.3,
+      "json": true
+    },
+    {
+      "name": "huge unicode",
+      "status": 200,
+      "ms": 68.6,
+      "json": true
+    }
+  ],
+  "parallel": {
+    "workers": 20,
+    "statuses": [
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200
+    ],
+    "server_errors": 0
+  },
+  "notes": [
+    "Container tf-wp7: docker run --cpus 2 --memory 4g --memory-swap 4g, image tensorforge:dev (994MB), model v1.0.0-38ecb9bd. Cores are this laptop, not the Azure B2als_v2.",
+    "A second start with --network none reached /health 200 in 3.26 s. docker history of the image has no tf2_ key and no baked API_KEY.",
+    "Startup time includes creating the container. The unlimited container named tensorforge was left running and was idle."
+  ]
+}

@@ -1,0 +1,242 @@
+{
+  "id": "nb_word_char",
+  "stage_a": {
+    "n": 800,
+    "accuracy": 0.5525,
+    "macro_f1": 0.549038,
+    "per_class_f1": {
+      "payment_refund": 0.532819,
+      "ride_trip_issue": 0.673913,
+      "lost_item": 0.5,
+      "order_missing_wrong": 0.421687,
+      "delivery_delay": 0.513089,
+      "food_quality": 0.583333,
+      "account_promo": 0.822785,
+      "safety_conduct": 0.358974,
+      "app_technical": 0.524823,
+      "general_inquiry": 0.641975,
+      "spam_irrelevant": 0.466019
+    },
+    "per_class_support": {
+      "payment_refund": 144,
+      "ride_trip_issue": 112,
+      "lost_item": 40,
+      "order_missing_wrong": 96,
+      "delivery_delay": 120,
+      "food_quality": 56,
+      "account_promo": 72,
+      "safety_conduct": 32,
+      "app_technical": 64,
+      "general_inquiry": 40,
+      "spam_irrelevant": 24
+    },
+    "confusion_matrix": [
+      [
+        69,
+        2,
+        16,
+        4,
+        3,
+        1,
+        5,
+        5,
+        29,
+        5,
+        5
+      ],
+      [
+        6,
+        62,
+        0,
+        0,
+        1,
+        0,
+        2,
+        30,
+        0,
+        0,
+        11
+      ],
+      [
+        0,
+        1,
+        26,
+        0,
+        7,
+        0,
+        0,
+        4,
+        0,
+        0,
+        2
+      ],
+      [
+        15,
+        0,
+        19,
+        35,
+        3,
+        4,
+        5,
+        0,
+        5,
+        2,
+        8
+      ],
+      [
+        13,
+        4,
+        1,
+        17,
+        49,
+        5,
+        4,
+        7,
+        3,
+        7,
+        10
+      ],
+      [
+        3,
+        0,
+        0,
+        13,
+        4,
+        28,
+        0,
+        2,
+        0,
+        1,
+        5
+      ],
+      [
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        65,
+        0,
+        1,
+        0,
+        4
+      ],
+      [
+        3,
+        3,
+        2,
+        0,
+        2,
+        0,
+        0,
+        21,
+        0,
+        0,
+        1
+      ],
+      [
+        2,
+        0,
+        0,
+        1,
+        0,
+        2,
+        4,
+        16,
+        37,
+        0,
+        2
+      ],
+      [
+        2,
+        0,
+        0,
+        0,
+        2,
+        0,
+        1,
+        0,
+        2,
+        26,
+        7
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        24
+      ]
+    ],
+    "secondary_exact": 0.735,
+    "secondary_per_class_f1": {
+      "ride_trip_issue": 0.380952,
+      "payment_refund": 0.529412,
+      "app_technical": 0.109091,
+      "delivery_delay": 0.135593,
+      "order_missing_wrong": 0.166667
+    },
+    "urgent_precision": 0.553719,
+    "urgent_recall": 0.8375,
+    "urgent_f1": 0.666667,
+    "ece": 0.222313,
+    "brier": 0.666426,
+    "urgent_brier": 0.077409,
+    "by_language": {
+      "en": {
+        "n": 280,
+        "accuracy": 0.414286,
+        "macro_f1": 0.409251
+      },
+      "mixed": {
+        "n": 20,
+        "accuracy": 0.55,
+        "macro_f1": 0.480303
+      },
+      "si": {
+        "n": 160,
+        "accuracy": 0.46875,
+        "macro_f1": 0.505586
+      },
+      "singlish": {
+        "n": 200,
+        "accuracy": 0.805,
+        "macro_f1": 0.82612
+      },
+      "ta": {
+        "n": 120,
+        "accuracy": 0.541667,
+        "macro_f1": 0.533464
+      },
+      "tanglish": {
+        "n": 20,
+        "accuracy": 0.7,
+        "macro_f1": 0.668831
+      }
+    },
+    "by_channel": {
+      "call_transcript": {
+        "n": 200,
+        "accuracy": 0.585,
+        "macro_f1": 0.564445
+      },
+      "chat": {
+        "n": 360,
+        "accuracy": 0.530556,
+        "macro_f1": 0.526695
+      },
+      "email": {
+        "n": 240,
+        "accuracy": 0.558333,
+        "macro_f1": 0.549148
+      }
+    }
+  }
+}

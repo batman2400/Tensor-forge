@@ -1,0 +1,23 @@
+{
+  "settings": {
+    "encoder_weight": {
+      "category": 0.75,
+      "secondary": 0.75,
+      "urgent": 0.5
+    },
+    "temperature": {
+      "category": 0.5,
+      "secondary": 2.0,
+      "urgent": 1.0
+    },
+    "thresholds": {
+      "secondary": 0.5,
+      "urgent": 0.5,
+      "review": 0.5
+    },
+    "oof_holdout": {
+      "secondary_exact": 0.9985416666666667,
+      "urgent_f1": 0.98853
+    }
+  }
+}

@@ -53,6 +53,7 @@ artifacts/*
 !artifacts/.gitkeep
 !artifacts/README.md
 !artifacts/manifest.json
+!artifacts/fusion.json
 
 # ---------------------------------------------------------------
 # Runtime state

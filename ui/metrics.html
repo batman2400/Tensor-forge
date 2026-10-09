@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f3efe6">
+  <title>TensorForge metrics</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230c6b52'/%3E%3Cpath d='M9.5 11h13M16 11v11' stroke='%23f4efe6' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div class="top">
+      <a class="brand" href="./">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+          <rect width="32" height="32" rx="8" fill="currentColor"/>
+          <path d="M9.5 11h13M16 11v11" stroke="#f4efe6" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+        <span class="wordmark">TensorForge</span>
+      </a>
+      <nav>
+        <a href="./">Predict</a>
+        <a href="metrics.html" aria-current="page">Metrics</a>
+      </nav>
+    </div>
+    <h1>Stage A metrics</h1>
+    <p class="lede">Train-only models scored on the 800 validation tickets. Fusion weights were fit on out-of-fold predictions. This is the number to quote.</p>
+  </header>
+  <main>
+    <div class="stats" id="summary"></div>
+    <section class="card">
+      <h2>Per class</h2>
+      <table id="classes">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th class="num">F1</th>
+            <th aria-hidden="true"></th>
+            <th class="num">Support</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+    <section class="card">
+      <h2>Language and channel</h2>
+      <h3>Language</h3>
+      <table id="languages">
+        <thead>
+          <tr>
+            <th>Language</th>
+            <th class="num">n</th>
+            <th class="num">Accuracy</th>
+            <th class="num">Macro-F1</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <h3>Channel</h3>
+      <table id="channels">
+        <thead>
+          <tr>
+            <th>Channel</th>
+            <th class="num">n</th>
+            <th class="num">Accuracy</th>
+            <th class="num">Macro-F1</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+    <section class="card">
+      <h2>Confusion matrix</h2>
+      <p class="meta">Rows are the gold category. Columns are the prediction, in the same order.</p>
+      <p class="meta legend"><span><span class="swatch hit"></span>Correct</span><span><span class="swatch miss"></span>Confused</span></p>
+      <div class="matrix"><table id="matrix"></table></div>
+    </section>
+    <section class="card">
+      <h2>Reliability</h2>
+      <p class="meta">Confidence bins against accuracy. The dashed line is perfect calibration.</p>
+      <div class="figure">
+        <img src="calibration.svg" alt="Stage A reliability diagram: confidence versus accuracy" width="440">
+      </div>
+    </section>
+  </main>
+  <p class="foot"><a href="./">Back to predict</a></p>
+  <script src="metrics.js"></script>
+</body>
+</html>

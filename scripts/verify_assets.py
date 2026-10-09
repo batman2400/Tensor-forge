@@ -128,7 +128,11 @@ def schema_team_rules(defs: dict) -> dict[str, str]:
 def verify_spec(rep: Report):
     section("OpenAPI YAML")
     spec = yaml.safe_load(YAML_PATH.read_text(encoding="utf-8"))
-    rep.check(spec.get("openapi", "").startswith("3.0"), f"openapi {spec.get('openapi')}", "unexpected openapi version")
+    rep.check(
+        spec.get("openapi", "").startswith("3.0"),
+        f"openapi {spec.get('openapi')}",
+        "unexpected openapi version",
+    )
     rep.ok(f"title: {spec['info']['title']} (v{spec['info']['version']})")
 
     ops = {
@@ -139,7 +143,11 @@ def verify_spec(rep: Report):
     }
     missing = EXPECTED_OPERATIONS - ops
     extra = ops - EXPECTED_OPERATIONS
-    rep.check(not missing, f"all {len(EXPECTED_OPERATIONS)} required operations present", f"missing operations: {sorted(missing)}")
+    rep.check(
+        not missing,
+        f"all {len(EXPECTED_OPERATIONS)} required operations present",
+        f"missing operations: {sorted(missing)}",
+    )
     if extra:
         rep.warn(f"additional operations in spec: {sorted(extra)}")
 
@@ -191,19 +199,43 @@ def verify_schemas(rep: Report, spec: dict, table, yaml_categories, yaml_teams, 
 
     # Enums and team mapping in the per-file schemas
     pr_defs = schemas["predict_response"]["$defs"]
-    rep.check(pr_defs["Category"]["enum"] == yaml_categories, "Category enum: schema == YAML (same order)", "Category enum differs between schema and YAML")
-    rep.check(pr_defs["Team"]["enum"] == yaml_teams, "Team enum: schema == YAML (same order)", "Team enum differs between schema and YAML")
+    rep.check(
+        pr_defs["Category"]["enum"] == yaml_categories,
+        "Category enum: schema == YAML (same order)",
+        "Category enum differs between schema and YAML",
+    )
+    rep.check(
+        pr_defs["Team"]["enum"] == yaml_teams,
+        "Team enum: schema == YAML (same order)",
+        "Team enum differs between schema and YAML",
+    )
     req_defs = schemas["predict_request"]["$defs"]
-    rep.check(req_defs["Channel"]["enum"] == yaml_channels, "Channel enum: schema == YAML", "Channel enum differs between schema and YAML")
+    rep.check(
+        req_defs["Channel"]["enum"] == yaml_channels,
+        "Channel enum: schema == YAML",
+        "Channel enum differs between schema and YAML",
+    )
     rules = schema_team_rules(pr_defs)
-    rep.check(rules == table, "schema if/then team rules == YAML category->team table", f"team rules differ: schema={rules} yaml={table}")
+    rep.check(
+        rules == table,
+        "schema if/then team rules == YAML category->team table",
+        f"team rules differ: schema={rules} yaml={table}",
+    )
 
     # The bundle must agree with the per-file schemas
     bundle_defs = bundle.get("$defs", {})
     if bundle_defs:
-        for key, expected in (("Category", yaml_categories), ("Team", yaml_teams), ("Channel", yaml_channels)):
+        for key, expected in (
+            ("Category", yaml_categories),
+            ("Team", yaml_teams),
+            ("Channel", yaml_channels),
+        ):
             if key in bundle_defs:
-                rep.check(bundle_defs[key]["enum"] == expected, f"bundle {key} enum matches", f"bundle {key} enum differs")
+                rep.check(
+                    bundle_defs[key]["enum"] == expected,
+                    f"bundle {key} enum matches",
+                    f"bundle {key} enum differs",
+                )
         rep.ok(f"bundle $defs: {sorted(bundle_defs)}")
     else:
         rep.warn("bundle has no top-level $defs; skipped bundle enum comparison")
@@ -290,13 +322,28 @@ def verify_examples(rep: Report, spec: dict, vals: dict[str, Draft202012Validato
     cases = {
         "wrong team for category": {**good, "team": "Tech Support"},
         "secondary equals primary": {**good, "secondary_category": "delivery_delay"},
-        "spam marked urgent": {**good, "category": "spam_irrelevant", "team": "Auto-close / Spam Filter", "secondary_category": None, "is_urgent": True},
-        "spam with secondary": {**good, "category": "spam_irrelevant", "team": "Auto-close / Spam Filter", "is_urgent": False},
+        "spam marked urgent": {
+            **good,
+            "category": "spam_irrelevant",
+            "team": "Auto-close / Spam Filter",
+            "secondary_category": None,
+            "is_urgent": True,
+        },
+        "spam with secondary": {
+            **good,
+            "category": "spam_irrelevant",
+            "team": "Auto-close / Spam Filter",
+            "is_urgent": False,
+        },
         "missing secondary key": {k: x for k, x in good.items() if k != "secondary_category"},
         "confidence above 1": {**good, "confidence": 1.2},
         "unknown category": {**good, "category": "billing"},
     }
-    rep.check(v.is_valid(good), "baseline good response is accepted", "baseline good response was rejected")
+    rep.check(
+        v.is_valid(good),
+        "baseline good response is accepted",
+        "baseline good response was rejected",
+    )
     for label, bad in cases.items():
         rep.check(not v.is_valid(bad), f"rejected: {label}", f"NOT rejected: {label}")
 
@@ -310,13 +357,17 @@ def verify_examples(rep: Report, spec: dict, vals: dict[str, Draft202012Validato
         "text too long": {"channel": "chat", "text": "a" * 10001},
     }
     for label, bad in req_cases.items():
-        rep.check(not req.is_valid(bad), f"request rejected: {label}", f"request NOT rejected: {label}")
+        rep.check(
+            not req.is_valid(bad), f"request rejected: {label}", f"request NOT rejected: {label}"
+        )
     for label, ok_req in {
-        "emoji-only text": {"channel": "chat", "text": "\U0001F64F\U0001F64F"},
+        "emoji-only text": {"channel": "chat", "text": "\U0001f64f\U0001f64f"},
         "sinhala text": {"channel": "chat", "text": "කාර් එකේ මගේ බෑග් එක අමතක වුණා"},
         "extra unknown property": {"channel": "email", "text": "hi", "language": "en"},
     }.items():
-        rep.check(req.is_valid(ok_req), f"request accepted: {label}", f"request wrongly rejected: {label}")
+        rep.check(
+            req.is_valid(ok_req), f"request accepted: {label}", f"request wrongly rejected: {label}"
+        )
 
 
 # ------------------------------------------------------------------------ dataset
@@ -352,10 +403,14 @@ def norm_csv_row(r: dict) -> dict:
     }
 
 
-def verify_dataset(rep: Report, table: dict[str, str], vals: dict[str, Draft202012Validator], categories, channels):
+def verify_dataset(
+    rep: Report, table: dict[str, str], vals: dict[str, Draft202012Validator], categories, channels
+):
     section("Dataset (data/)")
     if not (DATA_DIR / "train.csv").is_file():
-        rep.fail("data/train.csv not found. Download the dataset from the official link in README.md into data/")
+        rep.fail(
+            "data/train.csv not found. Download the dataset from the official link in README.md into data/"
+        )
         return
 
     notes = DATA_DIR / "DATA_NOTES.md"
@@ -367,18 +422,38 @@ def verify_dataset(rep: Report, table: dict[str, str], vals: dict[str, Draft2020
         jsonl_path = DATA_DIR / f"{split}.jsonl"
         header, csv_raw = read_csv_rows(csv_path)
         jl = read_jsonl_rows(jsonl_path)
-        rep.check(header == DATA_COLUMNS, f"{split}.csv columns match the documented order", f"{split}.csv columns: {header}")
-        rep.check(len(csv_raw) == expected, f"{split}.csv has {len(csv_raw)} rows", f"{split}.csv has {len(csv_raw)} rows, expected {expected}")
-        rep.check(len(jl) == expected, f"{split}.jsonl has {len(jl)} rows", f"{split}.jsonl has {len(jl)} rows, expected {expected}")
+        rep.check(
+            header == DATA_COLUMNS,
+            f"{split}.csv columns match the documented order",
+            f"{split}.csv columns: {header}",
+        )
+        rep.check(
+            len(csv_raw) == expected,
+            f"{split}.csv has {len(csv_raw)} rows",
+            f"{split}.csv has {len(csv_raw)} rows, expected {expected}",
+        )
+        rep.check(
+            len(jl) == expected,
+            f"{split}.jsonl has {len(jl)} rows",
+            f"{split}.jsonl has {len(jl)} rows, expected {expected}",
+        )
 
         csv_rows = [norm_csv_row(r) for r in csv_raw]
-        rep.check(csv_rows == jl, f"{split}: CSV and JSONL contents are identical (incl. embedded newlines)", f"{split}: CSV and JSONL differ")
+        rep.check(
+            csv_rows == jl,
+            f"{split}: CSV and JSONL contents are identical (incl. embedded newlines)",
+            f"{split}: CSV and JSONL differ",
+        )
         splits[split] = csv_rows
 
         nl = sum("\n" in r["text"] for r in csv_rows)
-        rep.ok(f"{split}: {nl} texts contain embedded newlines (parsed correctly by the csv module)")
+        rep.ok(
+            f"{split}: {nl} texts contain embedded newlines (parsed correctly by the csv module)"
+        )
         non_nfc = sum(unicodedata.normalize("NFC", r["text"]) != r["text"] for r in csv_rows)
-        rep.ok(f"{split}: {non_nfc} texts are not NFC-normalized (keep raw text; normalize deliberately in features)")
+        rep.ok(
+            f"{split}: {non_nfc} texts are not NFC-normalized (keep raw text; normalize deliberately in features)"
+        )
 
     all_rows = [(s, r) for s, rows in splits.items() for r in rows]
 
@@ -402,30 +477,53 @@ def verify_dataset(rep: Report, table: dict[str, str], vals: dict[str, Draft2020
             bad["non-email has subject"] += 1
         if not r["text"].strip():
             bad["blank text"] += 1
-    rep.check(not bad, "all labels/fields are valid (enums, secondary != primary, spam rule, channel rule)", f"label problems: {dict(bad)}")
+    rep.check(
+        not bad,
+        "all labels/fields are valid (enums, secondary != primary, spam rule, channel rule)",
+        f"label problems: {dict(bad)}",
+    )
 
     # Uniqueness and leakage
     ids = [r["ticket_id"] for _, r in all_rows]
-    rep.check(len(ids) == len(set(ids)), "ticket_ids unique across train+validation", "duplicate ticket_ids found")
+    rep.check(
+        len(ids) == len(set(ids)),
+        "ticket_ids unique across train+validation",
+        "duplicate ticket_ids found",
+    )
     tr_texts = {r["text"] for r in splits["train"]}
     overlap = sum(r["text"] in tr_texts for r in splits["validation"])
-    rep.check(overlap == 0, "no train/validation text overlap", f"{overlap} validation texts also appear in train")
+    rep.check(
+        overlap == 0,
+        "no train/validation text overlap",
+        f"{overlap} validation texts also appear in train",
+    )
     dup_in_train = len(splits["train"]) - len(tr_texts)
-    rep.check(dup_in_train == 0, "no duplicate texts inside train", f"{dup_in_train} duplicate texts inside train")
+    rep.check(
+        dup_in_train == 0,
+        "no duplicate texts inside train",
+        f"{dup_in_train} duplicate texts inside train",
+    )
 
     # Distribution summary (informational)
     for split, rows in splits.items():
         c = Counter(r["category"] for r in rows)
         sec = sum(r["secondary_category"] is not None for r in rows)
         urg = sum(r["is_urgent"] for r in rows)
-        rep.ok(f"{split}: secondary on {sec / len(rows):.1%}, urgent {urg / len(rows):.1%}, languages {dict(Counter(r['language'] for r in rows))}")
+        rep.ok(
+            f"{split}: secondary on {sec / len(rows):.1%}, urgent {urg / len(rows):.1%}, languages {dict(Counter(r['language'] for r in rows))}"
+        )
         rep.ok(f"{split}: categories {dict(c.most_common())}")
 
     # Mapping: rows -> PredictRequest, labels -> PredictResponse
     req, resp = vals["predict_request"], vals["predict_response"]
     bad_req = bad_resp = 0
     for _, r in all_rows:
-        request = {"ticket_id": r["ticket_id"], "channel": r["channel"], "subject": r["subject"], "text": r["text"]}
+        request = {
+            "ticket_id": r["ticket_id"],
+            "channel": r["channel"],
+            "subject": r["subject"],
+            "text": r["text"],
+        }
         if not req.is_valid(request):
             bad_req += 1
         gold = {
@@ -439,8 +537,16 @@ def verify_dataset(rep: Report, table: dict[str, str], vals: dict[str, Draft2020
         }
         if not resp.is_valid(gold):
             bad_resp += 1
-    rep.check(bad_req == 0, f"all {len(all_rows)} rows map to a valid PredictRequest (language column intentionally not sent)", f"{bad_req} rows fail the PredictRequest schema")
-    rep.check(bad_resp == 0, f"all {len(all_rows)} gold labels map to a valid PredictResponse (team derived from category)", f"{bad_resp} gold labels fail the PredictResponse schema")
+    rep.check(
+        bad_req == 0,
+        f"all {len(all_rows)} rows map to a valid PredictRequest (language column intentionally not sent)",
+        f"{bad_req} rows fail the PredictRequest schema",
+    )
+    rep.check(
+        bad_resp == 0,
+        f"all {len(all_rows)} gold labels map to a valid PredictResponse (team derived from category)",
+        f"{bad_resp} gold labels fail the PredictResponse schema",
+    )
 
 
 # --------------------------------------------------------------------------- main
@@ -449,7 +555,9 @@ def verify_dataset(rep: Report, table: dict[str, str], vals: dict[str, Draft2020
 def main() -> int:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     ap.add_argument("--no-data", action="store_true", help="skip dataset checks")
     args = ap.parse_args()
 

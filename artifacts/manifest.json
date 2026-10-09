@@ -1,0 +1,20 @@
+{
+  "encoder_enabled": true,
+  "files": {
+    "classical.joblib": "aff3525a729212ad5c1c3af1ed7d63f193a585f9bf15c1c620d8c5b65244c86c",
+    "fusion.json": "1a0ddf8cc48a1ef4730d909b434ccc84e74cdc2f39a35a91e7560790ad4e6bb0",
+    "encoder.int8.onnx": "44b5d89b45da072c175fc23159979dce1a0abf7e6691f710dc19ce9157b0fdee",
+    "tokenizer.json": "6040ba36e3e2f7b2fa6ae076b69d024a08666bea4c345105a32e542900fcc7e7",
+    "encoder_meta.json": "183d7e144fd80c60a380b38bc80f8dc808481929037ba65e00dda66cbe0da7c0"
+  },
+  "training_date": "2026-10-06",
+  "git_commit": "a569d4b8605dc8d06abcbf6e2f391eb64c37a63c",
+  "metrics": {
+    "fusion_stage_a_macro_f1": 0.802169,
+    "classical_stage_a_macro_f1": 0.655821
+  },
+  "license_notes": "Classical TF-IDF models were trained for this project. The encoder is intfloat/multilingual-e5-small (MIT), exported to int8 ONNX.",
+  "serving": "fusion",
+  "manifest_sha256": "38ecb9bdb346650ea66c6cf8853a03e8c8f6108ada06b606cb26af94136d41b3",
+  "model_version": "v1.0.0-38ecb9bd"
+}

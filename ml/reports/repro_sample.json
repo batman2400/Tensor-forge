@@ -1,0 +1,110 @@
+[
+  {
+    "ticket_id": "TF-VA-000001",
+    "category": "safety_conduct",
+    "secondary_category": "ride_trip_issue",
+    "is_urgent": true,
+    "confidence": 0.9794,
+    "team": "Trust & Safety",
+    "model_version": "v0.1.0"
+  },
+  {
+    "ticket_id": "TF-VA-000002",
+    "category": "app_technical",
+    "secondary_category": null,
+    "is_urgent": false,
+    "confidence": 0.9951,
+    "team": "Tech Support",
+    "model_version": "v0.1.0"
+  },
+  {
+    "ticket_id": "TF-VA-000003",
+    "category": "delivery_delay",
+    "secondary_category": null,
+    "is_urgent": false,
+    "confidence": 0.9965,
+    "team": "Delivery Operations",
+    "model_version": "v0.1.0"
+  },
+  {
+    "ticket_id": "TF-VA-000004",
+    "category": "delivery_delay",
+    "secondary_category": null,
+    "is_urgent": false,
+    "confidence": 0.9939,
+    "team": "Delivery Operations",
+    "model_version": "v0.1.0"
+  },
+  {
+    "ticket_id": "TF-VA-000005",
+    "category": "order_missing_wrong",
+    "secondary_category": null,
+    "is_urgent": false,
+    "confidence": 0.9954,
+    "team": "Food Operations",
+    "model_version": "v0.1.0"
+  },
+  {
+    "ticket_id": "TF-VA-000006",
+    "category": "delivery_delay",
+    "secondary_category": null,
+    "is_urgent": false,
+    "confidence": 0.995,
+    "team": "Delivery Operations",
+    "model_version": "v0.1.0"
+  },
+  {
+    "ticket_id": "TF-VA-000007",
+    "category": "ride_trip_issue",
+    "secondary_category": null,
+    "is_urgent": false,
+    "confidence": 0.9955,
+    "team": "Ride Operations",
+    "model_version": "v0.1.0"
+  },
+  {
+    "ticket_id": "TF-VA-000008",
+    "category": "account_promo",
+    "secondary_category": null,
+    "is_urgent": false,
+    "confidence": 0.9963,
+    "team": "Account Services",
+    "model_version": "v0.1.0"
+  },
+  {
+    "ticket_id": "TF-VA-000009",
+    "category": "safety_conduct",
+    "secondary_category": null,
+    "is_urgent": true,
+    "confidence": 0.9889,
+    "team": "Trust & Safety",
+    "model_version": "v0.1.0"
+  },
+  {
+    "ticket_id": "TF-VA-000010",
+    "category": "payment_refund",
+    "secondary_category": null,
+    "is_urgent": false,
+    "confidence": 0.9906,
+    "team": "Payments & Refunds",
+    "model_version": "v0.1.0"
+  },
+  {
+    "ticket_id": "TF-VA-000011",
+    "category": "food_quality",
+    "secondary_category": null,
+    "is_urgent": true,
+    "confidence": 0.988,
+    "team": "Restaurant Quality",
+    "model_version": "v0.1.0"
+  },
+  {
+    "ticket_id": "TF-VA-000012",
+    "category": "general_inquiry",
+    "secondary_category": null,
+    "is_urgent": false,
+    "confidence": 0.9978,
+    "team": "Front-line Support",
+    "model_version": "v0.1.0"
+  }
+]

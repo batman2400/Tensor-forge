@@ -65,9 +65,7 @@ def repo_root() -> Path:
 
 
 def git_lines(args: list[str], root: Path) -> list[str]:
-    out = subprocess.run(
-        ["git", *args], capture_output=True, cwd=root, check=True
-    ).stdout
+    out = subprocess.run(["git", *args], capture_output=True, cwd=root, check=True).stdout
     return [p.decode("utf-8", "surrogateescape") for p in out.split(b"\0") if p]
 
 
@@ -94,9 +92,7 @@ def forbidden_path(rel: str) -> bool:
     return any(fnmatch.fnmatch(rel, g) for g in FORBIDDEN_PATH_GLOBS)
 
 
-def scan_bytes(
-    rel: str, data: bytes, exact: list[bytes], problems: list[str]
-) -> None:
+def scan_bytes(rel: str, data: bytes, exact: list[bytes], problems: list[str]) -> None:
     if rel == SELF:
         return
     for lineno, line in enumerate(data.split(b"\n"), start=1):
@@ -109,9 +105,7 @@ def scan_bytes(
                 break
 
 
-def check_paths(
-    root: Path, rels: list[str], read_staged: bool
-) -> list[str]:
+def check_paths(root: Path, rels: list[str], read_staged: bool) -> list[str]:
     problems: list[str] = []
     exact = local_exact_secrets(root)
     for rel in rels:
@@ -120,9 +114,7 @@ def check_paths(
             problems.append(f"{posix}: this file must never be committed (see .gitignore)")
             continue
         if read_staged:
-            res = subprocess.run(
-                ["git", "show", f":{rel}"], capture_output=True, cwd=root
-            )
+            res = subprocess.run(["git", "show", f":{rel}"], capture_output=True, cwd=root)
             if res.returncode != 0:
                 continue
             data = res.stdout
@@ -136,7 +128,9 @@ def check_paths(
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     mode = ap.add_mutually_exclusive_group(required=True)
     mode.add_argument("--staged", action="store_true", help="scan staged changes")
     mode.add_argument("--all", action="store_true", help="scan all tracked files")

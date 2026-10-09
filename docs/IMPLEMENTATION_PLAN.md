@@ -27,8 +27,17 @@ Deadline: **Saturday 10 Oct 2026, 18:00** (no extensions). Solo build. Day 0 (4 
 | Item | Status |
 | --- | --- |
 | Repo, hooks, CI, environment (Python 3.12 + CUDA torch), asset verification | done (Day 0), pushed to GitHub |
-| Architecture and implementation plan | this document set |
-| Everything below | not started |
+| Architecture and implementation plan | done |
+| WP1 EDA, folds, metrics | done (Day 1) |
+| WP2 classical baseline v0 (`svc_word_char`, Stage A macro-F1 0.656) | done (Day 1) |
+| WP3 `/health`, `/predict`, `/predict/batch` and contract tests | done (Day 1) |
+| WP4 job API (`/batch/jobs`, poll, results, delete) | done (Day 2) |
+| WP5 fusion, ONNX, gate G1 | done: encoder adopted; final fit exported to int8 and fused in the engine |
+| Encoder Stage A + 5-fold CV | done (Day 2); not the serving model |
+| WP9 Azure | image `sha256:5d64978226bc` is running; `https://tensorforge-fade.southindia.cloudapp.azure.com/health` returns `v1.0.0-38ecb9bd` |
+| Manifest and Docker image | `v1.0.0-38ecb9bd`, encoder on; image `tensorforge:dev` (994 MB) |
+| WP7 local (2 CPU / 4 GB, laptop cores) | done: `/predict` p95 48 ms, 100-batch 1.9 s, 5,000-job 128 s, ~560 MB, startup 4.6 s, offline start 3.3 s. See `ml/reports/wp7.md` |
+| WP7 on the Azure VM, WP9 deploy, WP10 demo | hosted image is live; 5,000-job succeeded; 2,000-job poll p95 under 1 s; demo at `/demo/` |
 
 ---
 
@@ -278,10 +287,45 @@ Repository and evidence
 
 ---
 
-## 9. Immediate next actions (Day 1 morning)
+## 9. Where things stand (morning of Day 2, Tue 6 Oct)
 
-1. Create the Azure VM + static IP + DNS label; check quota (parallel, 30-45 min).
-2. `ml/data.py`, `folds.json`, `ml/evaluate.py`, quick EDA.
-3. `app/labels.py`, `app/text.py`, TF-IDF baseline v0, first numbers into `experiments.csv`.
-4. API skeleton with auth + validation + `/predict`, contract tests alongside.
-5. Prepare the Kaggle notebook shell (GPU T4 on, private dataset upload of the four data files only).
+Re-checked this morning: the test suite passes. Day 1 WP1–WP3 are in the tree (folds, EDA
+findings, three classical configs, serving artifact `artifacts/classical.joblib`, contract tests).
+
+Day 2 exit is met in the working tree:
+
+- Job API and `tests/test_jobs.py`: submit 202, invalid item creates no job, monotonic `processed`,
+  paging, 409 / 404 / 410, idempotency, 429, restart `interrupted`, health and poll stay under 1 s
+  during a 5,000-ticket job.
+- Classical search kept `svc_word_char` (v0.1.0), including the LightGBM member (Stage A macro-F1 0.475). See `ml/reports/classical_v1.md`.
+- Encoder Stage A macro-F1 0.786 and the 5-fold numbers are in `ml/reports/experiments.csv`.
+  The Kaggle output (summary, stage A, and fold probabilities, no weights) is in
+  `ml/runs/encoder_e5_small`. Pass the token as `KAGGLE_API_TOKEN`; `KAGGLE_KEY` alone gets HTTP 401.
+
+Checked after Azure sign-in: the South India VM `tensorforge` was already up (`Standard_B2als_v2`,
+2 vCPU / 4 GB, static IP, DNS `tensorforge-fade.southindia.cloudapp.azure.com`). Docker and Caddy
+are installed. `GET /health` and `HEAD /health` return 200
+`{"status":"ok","model_version":"placeholder","model_loaded":false}` with a valid certificate.
+`TF_BASE_URL` is set in `.env`. SSH is limited to the current public IP; ports 80 and 443 are open.
+
+Day 3 exit is met in the working tree:
+
+- Gate G1 passed (`ml/reports/g1.md`). Under a 2 CPU / 4 GB cap, validation p95
+  was 36 ms and a 10k-character ticket p95 was 73 ms, at 499 MB.
+- The serving encoder is a final fit on all 4,800 tickets for 4 epochs (the
+  stage-A best epoch), not the smoke checkpoint. `encoder_enabled` is true.
+  Model version is `v1.0.0-38ecb9bd`.
+- The int8 file is 118 MB, over GitHub's 100 MB limit, so it is not committed.
+  The image copies it from the local `artifacts/` directory.
+- Fused labels match the fp32 graph on 200 validation tickets.
+
+Day 4 local performance is in `ml/reports/wp7.md`. The same image under
+`--cpus 2 --memory 4g --memory-swap 4g` met the spec targets on this laptop
+(not the VM's cores): `/predict` p95 48 ms, 100-batch 1.9 s, 2,000-job 53 s,
+5,000-job 128 s, health p95 about 27 ms during the job, resident memory 563 MB,
+startup 4.6 s. `--network none` reached `/health` 200 in 3.3 s. Image size is
+994 MB. `docker history` has no API key.
+
+The Azure host is serving the frozen image. `https://tensorforge-fade.southindia.cloudapp.azure.com/health` returns `v1.0.0-38ecb9bd`. SSH is allowed from `175.157.233.118/32`. The container is limited to 2 CPUs and 3 GB because the VM has 3.8 GB of RAM, with a 2 GB swap file. A 5,000-ticket job on the VM reached `succeeded` at 5,000/5,000, and resident memory stayed about 557 MB. Image id `sha256:5d64978226bc891c3d7b09abf12ec19eb25d0c16aa8e523b6094d284b0639920`.
+
+Auto-shutdown is off. A reboot on 6 Oct 2026 brought the container back healthy in under a minute, and the public `/health` still returned `v1.0.0-38ecb9bd`. A later 2,000-ticket job on the VM had `/health` p95 844 ms and poll p95 761 ms, with no failed samples (`ml/reports/wp7_azure_poll.md`). The demo is at `/demo/`.

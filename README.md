@@ -12,9 +12,12 @@ The service follows the organizers' OpenAPI contract in [`spec/`](spec/): `POST 
 `POST /predict/batch` (1-100 tickets), async `POST /batch/jobs` (up to 5,000), job polling/results,
 and a public `GET /health`. All endpoints except `/health` require the API key.
 
-> **Status: Day 0 (scaffolding).** Repository, environment, git hooks and asset verification are in
-> place. EDA, model training and the API are built from Day 1. This README grows with the project
-> (training story, evaluation scores, architecture and the exact `docker run` command).
+> **Status: Day 4, model frozen, not yet deployed.** The image `tensorforge:dev` serves
+> fused model `v1.0.0-38ecb9bd` (Stage A macro-F1 0.802). On a 2 CPU / 4 GB container on
+> this laptop, `/predict` p95 was 48 ms, a 100-ticket batch took 1.9 s, and a 5,000-ticket
+> job finished in 128 s at about 560 MB. The Azure host is still the placeholder:
+> `https://tensorforge-fade.southindia.cloudapp.azure.com/health`.
+> `needs_human_review` is true when category confidence is below 0.5.
 
 ## Quick start (development)
 
@@ -34,6 +37,18 @@ python scripts/verify_assets.py
 
 Linux/macOS: create a Python 3.12 venv, `pip install -r requirements-torch-cu126.txt` (or the CPU
 wheel), `pip install -r requirements-train.txt -r requirements-dev.txt`, then `sh scripts/install_hooks.sh`.
+
+Day 1 commands, from the repo root with the project venv active:
+
+```powershell
+python -m ml.eda                 # folds, findings, majority-class floor
+python -m ml.train_classical     # three classical configs, writes artifacts/classical.joblib
+python -m pytest
+uvicorn app.main:app --env-file .env --host 0.0.0.0 --port 8000
+```
+
+`GET /health` is public. `POST /predict` and `POST /predict/batch` need `X-API-Key` or `Authorization: Bearer`.
+Findings are in `ml/reports/eda_findings.md`. The model choice is in `ml/reports/baseline_decision.md`.
 
 ## Environment files
 
