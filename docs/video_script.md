@@ -95,7 +95,7 @@ There is one product rule on top of the model, for email. If the subject and the
 
 **Show:** if you prepared a 3-row CSV, drop it. Otherwise skip to the metrics page and say the next paragraph without the upload.
 
-**Say:** A CSV with up to 100 rows uses the synchronous batch endpoint. A larger file, up to 5,000 rows, submits a job, polls status, and then loads the results. On this VM a 5,000-ticket job completed in 117 seconds, and the poll latency stayed under a second. The limit is 30 minutes. Locally, the same image under a 2 CPU and 4 GB cap finished that job in 72 seconds.
+**Say:** A CSV with up to 100 rows uses the synchronous batch endpoint. A larger file, up to 5,000 rows, submits a job, polls status, and then loads the results. Through public HTTPS on this VM, a 5,000-ticket job finished in 119 seconds, the submit returned in about 0.03 seconds, and poll latency stayed around 0.01 seconds. The limit is 30 minutes. The same image under a 2 CPU and 4 GB cap finished that job in 80 seconds.
 
 ## 12:15 — Metrics page
 

@@ -34,7 +34,7 @@ Deadline: **Saturday 10 Oct 2026, 18:00** (no extensions). Solo build. Day 0 (4 
 | WP4 job API (`/batch/jobs`, poll, results, delete) | done (Day 2) |
 | WP5 fusion, ONNX, gate G1 | done: encoder adopted; final fit exported to int8 and fused in the engine |
 | Encoder Stage A + 5-fold CV | done (Day 2); not the serving model |
-| WP9 Azure | image `sha256:5d64978226bc` is running; `https://tensorforge-fade.southindia.cloudapp.azure.com/health` returns `v1.0.0-38ecb9bd` |
+| WP9 Azure | image `sha256:45131d2759b9a58d5d40529f5c740f2ee7c5ceb7464eef1b0a80d793dc31a3db` is running; `https://tensorforge-fade.southindia.cloudapp.azure.com/health` returns `v1.0.0-38ecb9bd` |
 | Manifest and Docker image | `v1.0.0-38ecb9bd`, encoder on; image `tensorforge:dev` (994 MB) |
 | WP7 local (2 CPU / 4 GB, laptop cores) | done: `/predict` p95 48 ms, 100-batch 1.9 s, 5,000-job 128 s, ~560 MB, startup 4.6 s, offline start 3.3 s. See `ml/reports/wp7.md` |
 | WP7 on the Azure VM, WP9 deploy, WP10 demo | hosted image is live; 5,000-job succeeded; 2,000-job poll p95 under 1 s; demo at `/demo/` |
@@ -326,6 +326,8 @@ Day 4 local performance is in `ml/reports/wp7.md`. The same image under
 startup 4.6 s. `--network none` reached `/health` 200 in 3.3 s. Image size is
 994 MB. `docker history` has no API key.
 
-The Azure host is serving the frozen image. `https://tensorforge-fade.southindia.cloudapp.azure.com/health` returns `v1.0.0-38ecb9bd`. SSH is allowed from `175.157.233.118/32`. The container is limited to 2 CPUs and 3 GB because the VM has 3.8 GB of RAM, with a 2 GB swap file. A 5,000-ticket job on the VM reached `succeeded` at 5,000/5,000, and resident memory stayed about 557 MB. Image id `sha256:5d64978226bc891c3d7b09abf12ec19eb25d0c16aa8e523b6094d284b0639920`.
+The Azure host is serving the frozen image. `https://tensorforge-fade.southindia.cloudapp.azure.com/health` returns `v1.0.0-38ecb9bd`. The container is limited to 2 CPUs and 3 GB because the VM has 3.8 GB of RAM, with a 2 GB swap file. A 5,000-ticket job on the VM reached `succeeded` at 5,000/5,000, and resident memory stayed about 557 MB.
+
+On 9 October 2026 the running image was replaced with `sha256:45131d2759b9a58d5d40529f5c740f2ee7c5ceb7464eef1b0a80d793dc31a3db` (`tensorforge:v1.0.1`, built from commit `52e612b`). The previous image `sha256:e18b0c716e0240c4dc86f9a04703380e9a82cd2a604856e4d30d3e21da88a11c` is still on the VM as the rollback image, and the job volume `tf_data` was kept. An earlier image id `sha256:5d64978226bc891c3d7b09abf12ec19eb25d0c16aa8e523b6094d284b0639920` is not the deployed release. SSH is limited to the operator's current address.
 
 Auto-shutdown is off. A reboot on 6 Oct 2026 brought the container back healthy in under a minute, and the public `/health` still returned `v1.0.0-38ecb9bd`. A later 2,000-ticket job on the VM had `/health` p95 844 ms and poll p95 761 ms, with no failed samples (`ml/reports/wp7_azure_poll.md`). The demo is at `/demo/`.

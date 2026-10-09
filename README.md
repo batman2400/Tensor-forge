@@ -23,7 +23,8 @@ sent as `X-API-Key` or `Authorization: Bearer`.
 | Health | https://tensorforge-fade.southindia.cloudapp.azure.com/health |
 | Demo | https://tensorforge-fade.southindia.cloudapp.azure.com/demo/ |
 | Model | `v1.0.0-38ecb9bd` (fused TF-IDF + int8 encoder) |
-| Image | `sha256:e18b0c716e0240c4dc86f9a04703380e9a82cd2a604856e4d30d3e21da88a11c` |
+| Image | `sha256:45131d2759b9a58d5d40529f5c740f2ee7c5ceb7464eef1b0a80d793dc31a3db` |
+| Release | `v1.0.1` (tag `v1.0.0` remains on the earlier commit `f164ba4`) |
 
 The demo asks the visitor to paste the API key. The key is kept in that tab's session storage and is not in the page source.
 
